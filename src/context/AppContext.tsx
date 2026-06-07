@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, useMemo, useRef, ReactNode } from 'react'
 import { createClient } from '@/lib/supabase'
 import { User } from '@supabase/supabase-js'
 
@@ -25,7 +25,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [userRole, setUserRole] = useState<string>('viewer')
   const [loading, setLoading] = useState(true)
-  const [initialized, setInitialized] = useState(false)
+  const initializedRef = useRef(false)
   const [lastError, setLastError] = useState<string | null>(null)
 
   const supabase = useMemo(() => createClient(), [])
@@ -41,8 +41,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [lastError])
 
   useEffect(() => {
-    if (initialized) return
-    setInitialized(true)
+    if (initializedRef.current) return
+    initializedRef.current = true
 
     const init = async () => {
       const pathname = window.location.pathname
@@ -99,7 +99,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
 
     init()
-  }, [initialized, supabase])
+  }, [supabase])
 
   return (
     <AppContext.Provider value={{ user, userRole, isViewer, loading, lastError, clearError }}>
