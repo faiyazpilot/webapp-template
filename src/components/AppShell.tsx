@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
 import Link from 'next/link'
 import { useApp } from '@/context/AppContext'
 import { useTheme } from '@/context/ThemeContext'
+import { APP_NAME } from '@/lib/appConfig'
 import {
   LogOut, PanelLeft, PanelLeftClose, Sun, Moon,
   Settings, LayoutDashboard, Users, Activity
@@ -18,6 +19,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
 
   const [sidebarExpanded, setSidebarExpanded] = useState(true)
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
+  const cancelRef = useRef<HTMLButtonElement>(null)
+
+  // When the logout modal opens, focus Cancel and let Escape dismiss it.
+  useEffect(() => {
+    if (!showLogoutConfirm) return
+    cancelRef.current?.focus()
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setShowLogoutConfirm(false)
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [showLogoutConfirm])
 
   const handleLogout = async () => {
     const { createClient } = await import('@/lib/supabase')
@@ -62,9 +75,9 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <div className="flex items-center gap-3">
           {/* Placeholder logo */}
           <div className="h-7 w-7 rounded bg-blue-600 flex items-center justify-center text-white font-bold text-xs flex-shrink-0">
-            W
+            {APP_NAME.charAt(0).toUpperCase()}
           </div>
-          <span className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>Web App</span>
+          <span className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>{APP_NAME}</span>
           <span className="text-[10px] px-1.5 py-0.5 rounded font-mono" style={{ background: 'rgba(59, 130, 246, 0.1)', color: 'var(--text-muted)' }}>v1.0.0</span>
         </div>
 
@@ -163,16 +176,17 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       {/* Logout Confirmation Modal */}
       {showLogoutConfirm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-          <div className="rounded-xl p-6 w-full max-w-sm border" style={{ background: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
+          <div role="dialog" aria-modal="true" aria-labelledby="logout-title" className="rounded-xl p-6 w-full max-w-sm border" style={{ background: 'var(--bg-primary)', borderColor: 'var(--border-color)' }}>
             <div className="text-center mb-4">
               <div className="w-12 h-12 rounded-full bg-red-100 flex items-center justify-center mx-auto mb-3">
                 <LogOut className="w-6 h-6 text-red-600" />
               </div>
-              <h3 className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>Confirm Logout</h3>
+              <h3 id="logout-title" className="text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>Confirm Logout</h3>
               <p className="text-sm mt-2" style={{ color: 'var(--text-muted)' }}>Are you sure you want to log out?</p>
             </div>
             <div className="flex gap-3">
               <button
+                ref={cancelRef}
                 onClick={() => setShowLogoutConfirm(false)}
                 className="flex-1 px-4 py-2.5 border rounded-lg text-sm font-medium transition-colors"
                 style={{ borderColor: 'var(--border-color)', color: 'var(--text-primary)', background: 'var(--bg-secondary)' }}
