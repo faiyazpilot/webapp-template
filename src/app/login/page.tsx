@@ -3,6 +3,7 @@
 import { useState, useMemo, Suspense } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
+import { APP_NAME } from '@/lib/appConfig'
 
 export default function LoginPage() {
   return (
@@ -49,9 +50,9 @@ function LoginContent() {
         <div className="text-center mb-8">
           {/* Placeholder logo */}
           <div className="bg-blue-600 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4">
-            <span className="text-white font-bold text-2xl">W</span>
+            <span className="text-white font-bold text-2xl">{APP_NAME.charAt(0).toUpperCase()}</span>
           </div>
-          <h1 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>Web App</h1>
+          <h1 className="text-2xl font-bold" style={{ color: 'var(--text-primary)' }}>{APP_NAME}</h1>
           <p className="mt-2" style={{ color: 'var(--text-muted)' }}>Sign in to continue</p>
         </div>
 
