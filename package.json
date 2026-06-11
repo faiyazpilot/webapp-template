@@ -1,6 +1,26 @@
 {
   "name": "webapp-template",
   "version": "1.0.0",
+  "description": "Production-grade Next.js + Supabase app shell: Google OAuth, Postgres RLS roles, security headers, CI",
+  "license": "MIT",
+  "author": "Faiyazuddin Mohammed",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/faiyazpilot/webapp-template.git"
+  },
+  "homepage": "https://github.com/faiyazpilot/webapp-template#readme",
+  "bugs": {
+    "url": "https://github.com/faiyazpilot/webapp-template/issues"
+  },
+  "keywords": [
+    "nextjs",
+    "supabase",
+    "template",
+    "rls",
+    "google-oauth",
+    "tailwind",
+    "starter"
+  ],
   "private": true,
   "scripts": {
     "dev": "next dev",
