@@ -35,6 +35,10 @@ yarn-error.log*
 # personal/local AI-assistant config
 CLAUDE.local.md
 
+# Claude Code / local tooling
+.claude/
+supabase/.temp/
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
