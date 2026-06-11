@@ -126,14 +126,10 @@ This is the fiddliest part. Go slowly and the rest is easy.
    - **Authorized JavaScript origins:** add `https://<your-project-ref>.supabase.co`
    - **Authorized redirect URIs:** add `https://<your-project-ref>.supabase.co/auth/v1/callback`
 
-   ![Google authorized redirect URI](docs/images/google-redirect-uri.png)
-
    > **This is Supabase's callback URL, not your app's.** Your app's `/auth/callback` never goes into Google. Google hands the user to Supabase, and Supabase hands them to your app. Putting `http://localhost:3000/auth/callback` here is the #1 cause of the `redirect_uri_mismatch` error — don't do it.
 
 4. Click **Create** and copy the **Client ID** and **Client secret**.
 5. Back in the **Supabase Dashboard → Authentication → Sign In / Providers → Google**: toggle it **on**, paste the **Client ID** and **Client secret**, and click **Save**.
-
-   ![Supabase Google provider](docs/images/supabase-google-provider.png)
 
 </details>
 
@@ -164,7 +160,6 @@ This one file sets up everything the security depends on: the `app_roles` table,
    ```
    http://localhost:3000/auth/callback
    ```
-   ![Supabase URL configuration](docs/images/supabase-url-config.png)
 2. Start the app:
    ```bash
    npm run dev
@@ -228,6 +223,10 @@ Refresh the app and the admin navigation (the **Users** page) appears. It's deli
 | **viewer** | Dashboard only |
 
 > Enforced in Postgres via RLS — the UI checks are just for niceness. If a viewer hand-crafts an API request to read the user list, Postgres still says no.
+
+Admins manage roles right from the **Users** page (an admin can't change their own role, so you can't accidentally lock yourself out):
+
+![User management — light and dark](docs/images/users-admin-light.png)
 
 ## Troubleshooting
 
