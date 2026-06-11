@@ -44,6 +44,22 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (initializedRef.current) return
     initializedRef.current = true
 
+    // The DB trigger creates the role row at signup, but it can lag the very
+    // first page load by a moment — retry briefly before giving up.
+    const fetchRole = async (userId: string): Promise<string | null> => {
+      for (let attempt = 0; attempt < 3; attempt++) {
+        const { data, error } = await supabase
+          .from('app_roles')
+          .select('role')
+          .eq('user_id', userId)
+          .maybeSingle()
+        if (data?.role) return data.role
+        if (error) console.error('Role fetch failed:', error.message)
+        if (attempt < 2) await new Promise(r => setTimeout(r, 700 * (attempt + 1)))
+      }
+      return null
+    }
+
     const init = async () => {
       const pathname = window.location.pathname
       const isAuthPage = pathname === '/login' || pathname.startsWith('/auth/')
@@ -63,38 +79,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
       setUser(user)
 
-      const googleName = user.user_metadata?.full_name || user.user_metadata?.name || ''
-      const googleEmail = user.email || ''
+      // Roles are created by a DB trigger at signup — the browser only reads.
+      const role = await fetchRole(user.id)
 
-      // Check role — auto-create viewer if first login
-      const { data: roleData } = await supabase
-        .from('app_roles')
-        .select('role, name, email')
-        .eq('user_id', user.id)
-        .single()
-
-      if (roleData?.role) {
-        setUserRole(roleData.role)
-        if ((!roleData.name || !roleData.email) && (googleName || googleEmail)) {
-          await supabase.from('app_roles').update({
-            name: roleData.name || googleName || null,
-            email: roleData.email || googleEmail || null,
-          }).eq('user_id', user.id)
-        }
-      } else {
-        const { error: insertError } = await supabase
-          .from('app_roles')
-          .insert({ user_id: user.id, role: 'viewer', name: googleName || null, email: googleEmail || null })
-
-        if (insertError) {
-          console.error('Failed to create role:', insertError)
-          await supabase.auth.signOut()
-          window.location.href = '/login?error=not_authorized'
-          return
-        }
-        setUserRole('viewer')
+      if (!role) {
+        await supabase.auth.signOut()
+        window.location.href = '/login?error=role_missing'
+        return
       }
 
+      setUserRole(role)
       setLoading(false)
     }
 
