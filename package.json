@@ -1,6 +1,6 @@
 {
   "name": "webapp-template",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Production-grade Next.js + Supabase app shell: Google OAuth, Postgres RLS roles, security headers, CI",
   "license": "MIT",
   "author": "Faiyazuddin Mohammed",

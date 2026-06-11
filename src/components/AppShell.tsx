@@ -78,7 +78,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             {APP_NAME.charAt(0).toUpperCase()}
           </div>
           <span className="font-semibold text-sm" style={{ color: 'var(--text-primary)' }}>{APP_NAME}</span>
-          <span className="text-[10px] px-1.5 py-0.5 rounded font-mono" style={{ background: 'rgba(59, 130, 246, 0.1)', color: 'var(--text-muted)' }}>v1.0.0</span>
+          <span className="text-[10px] px-1.5 py-0.5 rounded font-mono" style={{ background: 'rgba(59, 130, 246, 0.1)', color: 'var(--text-muted)' }}>v1.1.0</span>
         </div>
 
         <div className="flex items-center gap-3">
