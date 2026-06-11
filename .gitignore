@@ -32,6 +32,9 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# personal/local AI-assistant config
+CLAUDE.local.md
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
