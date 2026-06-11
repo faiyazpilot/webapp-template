@@ -8,3 +8,7 @@ updates:
     groups:
       dependencies:
         patterns: ["*"]
+    ignore:
+      # eslint-config-next bundles eslint-plugin-react which doesn't support ESLint 10 yet
+      - dependency-name: "eslint"
+        update-types: ["version-update:semver-major"]
