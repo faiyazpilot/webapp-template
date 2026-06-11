@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Setup help & questions
+    url: https://github.com/faiyazpilot/webapp-template/discussions
+    about: Ask setup or how-do-I questions here
+  - name: Security vulnerability
+    url: https://github.com/faiyazpilot/webapp-template/blob/main/SECURITY.md
+    about: Please email — do not open a public issue
