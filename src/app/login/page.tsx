@@ -24,6 +24,7 @@ function LoginContent() {
     if (e === 'not_authorized') return 'Your account is not authorized. Contact an administrator.'
     if (e === 'auth_failed') return 'Authentication failed. Please try again.'
     if (e === 'config_missing') return 'App configuration error. Contact support.'
+    if (e === 'role_missing') return 'Your account is not set up yet. If you are the developer, re-run supabase-schema.sql (see README).'
     return ''
   }, [searchParams])
 
