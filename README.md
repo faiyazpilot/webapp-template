@@ -14,6 +14,8 @@
 - You need **real login and user roles** — not a fake "logged in as Admin" button that anyone can flip.
 - You want to **deploy to a real URL today** and start sharing it.
 
+> **Not a developer?** Read [BLUEPRINT.md](BLUEPRINT.md) instead — it's a step-by-step guide written for non-technical builders, with copy-paste AI prompts for every feature and phase.
+
 ---
 
 ## What you get
@@ -207,10 +209,16 @@ Refresh the app and the admin navigation (the **Users** page) appears. It's deli
 | App name (top bar, sidebar, login, browser tab) | `.env.local` → `NEXT_PUBLIC_APP_NAME` |
 | Sidebar navigation | `navItems` / `adminNavItems` in `src/components/AppShell.tsx` |
 | Dashboard tabs | `TABS` in `src/app/dashboard/page.tsx` |
-| Theme colors | CSS variables in `src/app/globals.css` |
-| Page metadata (title, social preview) | `src/app/layout.tsx` |
+| Theme colors | CSS variables at the top of `src/app/globals.css` — change `--accent`, `--sidebar-bg`, etc. |
+| Font | Replace the `Geist` import in `src/app/layout.tsx` with any [Google Font](https://fonts.google.com) |
+| Logo | Replace the `{/* Placeholder logo */}` blocks in `AppShell.tsx` and `src/app/login/page.tsx` with `<img src="/logo.png" />` and drop your file in `public/` |
+| Favicon | Replace `public/favicon.ico` — convert any PNG at [favicon.io](https://favicon.io) |
+| Social card (link preview image) | Replace `public/og.png` with a 1200×630 PNG |
+| Page metadata (title, description) | `src/app/layout.tsx` |
 | **Add a new page** | Create `src/app/<name>/page.tsx`, add it to `navItems` — the middleware protects it automatically |
 | **Add a new table** | Enable RLS + write policies (copy the pattern in `supabase-schema.sql`) before any client code touches it |
+
+> For a complete branding and feature-building walkthrough with AI prompts, see [BLUEPRINT.md](BLUEPRINT.md).
 
 > Using **Claude Code** or **Cursor**? `CLAUDE.md` gives your AI assistant full project context — edit it as your app grows so the AI stays accurate.
 
@@ -253,13 +261,31 @@ PRs welcome — see [CONTRIBUTING.md](CONTRIBUTING.md) and the [Code of Conduct]
 
 Found a vulnerability? See [SECURITY.md](SECURITY.md) — please **don't** open a public issue.
 
+## Free tier limits
+
+| Service | Free limit | What happens after |
+|---|---|---|
+| Supabase | 2 active projects, 500 MB database, 5 GB bandwidth/month | Project pauses after 1 week of inactivity; paid plan ~$25/month |
+| Vercel | 100 GB bandwidth/month, 6,000 build minutes/month | Email warning; rarely an issue for early-stage apps |
+| Google OAuth | Unlimited | Consent screen stays in Testing mode until you publish it (only your listed test users can log in until then) |
+
+## Known gaps
+
+Things that are missing and matter — documented here so you're not surprised:
+
+- **No external API pattern.** There are no Next.js API routes (`/api/`) in the template. Any call to a third-party service (Stripe, email, AI APIs) that requires a secret key must go server-side — calling it from the browser exposes the key. Until a worked example lands, see [BLUEPRINT.md § "Connecting to external services"](BLUEPRINT.md#1-connecting-to-external-services-stripe-hubspot-email-apis-ai-apis) for the prompt to use with AI.
+- **No data-querying guide.** The two Supabase clients (browser vs. server) are undocumented. There is also a silent failure mode when a database security rule (RLS) blocks a write — it returns an empty array instead of an error. See [BLUEPRINT.md § "Querying your own data"](BLUEPRINT.md#2-querying-your-own-data--the-pattern-and-a-known-trap) for the correct pattern.
+- **No MFA.** Authentication relies entirely on Google OAuth. Users who want a second factor should enable 2FA on their Google account. In-app TOTP MFA is not implemented.
+
 ## Roadmap
 
-A few things on the horizon (no dates — suggest your own in [Discussions](https://github.com/faiyazpilot/webapp-template/discussions)):
+No dates — this is open source with limited maintainer bandwidth. Suggest priorities in [Discussions](https://github.com/faiyazpilot/webapp-template/discussions) or open a PR:
 
-- Optional magic-link email login alongside Google.
-- A worked audit-log example wired up to the Activity page.
+- Worked example: server-side API route calling an external service (e.g. Resend for email).
+- Magic-link / passwordless email login alongside Google.
+- Audit-log example wired up to the Activity page.
 - More OAuth providers (GitHub, Microsoft).
+- Real-time data with Supabase channel subscriptions.
 
 ## License
 
