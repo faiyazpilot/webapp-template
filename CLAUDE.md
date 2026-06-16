@@ -15,6 +15,14 @@ a framework — simplicity beats cleverness.
 - **Supabase** (`@supabase/ssr`) — Auth + PostgreSQL with row-level security
 - **Vitest** for tests
 
+## Key documents
+
+| File | Purpose |
+|---|---|
+| `BLUEPRINT.md` | Step-by-step build guide for non-developers — phases, branding, copy-paste AI prompts, glossary |
+| `supabase-schema.sql` | Single source of truth for the database — always update this, never create tables manually in the UI |
+| `CLAUDE.md` | This file — AI assistant context |
+
 ## File map
 
 | File | What it does |
